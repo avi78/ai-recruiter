@@ -1,26 +1,25 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React, { useState } from "react";
 import { supabase } from "@/services/supabaseClient";
+import { toast } from "sonner"; // ✅ Import toast
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
 
     const { error } = await supabase.auth.signInWithOtp({ email });
 
     if (error) {
-      setMessage("Error sending magic link. Please try again.");
+      toast.error("❌ Error sending magic link. Please try again.");
     } else {
-      setMessage("Magic link sent! Check your email.");
+      toast.success("✅ Magic link sent! Check your email.");
     }
 
     setLoading(false);
@@ -65,8 +64,6 @@ export default function Login() {
             {loading ? "Sending..." : "Send Magic Link"}
           </Button>
         </form>
-
-        {message && <p className="text-sm text-center text-muted-foreground">{message}</p>}
       </div>
     </div>
   );
