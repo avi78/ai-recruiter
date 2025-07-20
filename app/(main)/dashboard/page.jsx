@@ -1,18 +1,17 @@
 "use client";
 
 import { useUser } from "../../provider/userProvider";
+import CreateOptions from "./_components/CreateOptions";
+import WelcomeContainer from "./_components/WelcomeContainer";
 
 export default function Dashboard() {
   const { user } = useUser();
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Welcome to NeuroHire</h1>
-      {user ? (
-        <p className="mt-2 text-gray-700">Logged in as {user.email}</p>
-      ) : (
-        <p className="mt-2 text-gray-500">Loading user...</p>
-      )}
+    <div>
+      <WelcomeContainer/>
+      <h2 className="my-3 font-bold text-2xl">Dashboard</h2>
+      <CreateOptions/>
     </div>
   );
 }

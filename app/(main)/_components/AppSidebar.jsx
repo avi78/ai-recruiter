@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import {
   Sidebar,
@@ -13,8 +14,11 @@ import { SideBarOptions } from "@/services/Constants";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function AppSidebar() {
+    const path=usePathname();
+    console.log(path);
   return (
     <Sidebar>
       <SidebarHeader className="flex items-center mt-5">
@@ -35,10 +39,10 @@ export default function AppSidebar() {
             <SidebarMenu>
               {SideBarOptions.map((option, index) => (
                 <SidebarMenuItem key={index} className='p-1'>
-                  <SidebarMenuButton asChild className='p-4'>
+                  <SidebarMenuButton asChild className={`p-4 ${path==option.path && 'bg-blue-50'}`}>
                     <Link href={option.path}>
-                      <option.icon />
-                      <span className="text-[16px]">{option.name}</span>
+                      <option.icon className={`${path==option.path && 'text-primary'}`}/>
+                      <span className={`text-[16px] font-medium ${path==option.path && 'text-primary'}`}>{option.name}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
