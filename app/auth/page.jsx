@@ -1,12 +1,34 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+import { supabase } from "@/services/supabaseClient";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+
+    const { error } = await supabase.auth.signInWithOtp({ email });
+
+    if (error) {
+      setMessage("Error sending magic link. Please try again.");
+    } else {
+      setMessage("Magic link sent! Check your email.");
+    }
+
+    setLoading(false);
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-muted">
       <div className="flex flex-col items-center bg-white shadow-lg rounded-3xl p-10 max-w-md w-full space-y-6">
-        {/* Logo */}
         <Image
           src="/logo.png"
           alt="NeuroHire Logo"
@@ -15,7 +37,6 @@ export default function Login() {
           className="mb-4"
         />
 
-        {/* Login Illustration */}
         <Image
           src="/login.png"
           alt="Login Illustration"
@@ -24,16 +45,28 @@ export default function Login() {
           className="rounded-xl object-cover w-full h-[200px]"
         />
 
-        {/* Welcome Text */}
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-bold tracking-tight">Welcome to NeuroHire</h2>
           <p className="text-sm text-muted-foreground">
-            Sign in with your Google account to continue
+            Enter your email to get a magic login link
           </p>
         </div>
 
-        {/* Login Button */}
-        <Button className="w-full">Login with Google</Button>
+        <form onSubmit={handleLogin} className="w-full space-y-4">
+          <input
+            type="email"
+            required
+            placeholder="your@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Sending..." : "Send Magic Link"}
+          </Button>
+        </form>
+
+        {message && <p className="text-sm text-center text-muted-foreground">{message}</p>}
       </div>
     </div>
   );
